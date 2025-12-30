@@ -1,0 +1,55 @@
+@use "./variables" as *;
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.thead {
+  background: $bg-light;
+}
+
+.th {
+  text-align: left;
+  padding: 12px;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.td {
+  padding: 12px;
+  font-size: $font-md;
+  vertical-align: top;
+}
+
+.tr {
+  border-top: 1px solid $border-light;
+}
+
+.pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: $font-sm;
+  border: 1px solid $border-color;
+  background: white;
+  text-transform: lowercase;
+
+  &--active {
+    font-weight: 600;
+  }
+
+  &--paused {
+    font-style: italic;
+  }
+
+  &--archived {
+    opacity: 0.7;
+  }
+}
