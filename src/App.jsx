@@ -10,6 +10,7 @@ export default function App() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
   const [category, setCategory] = useState("");
+  const [priority, setPriority] = useState("");
 
   const [sort, setSort] = useState("createdAt");
   const [order, setOrder] = useState("desc");
@@ -35,18 +36,20 @@ export default function App() {
       q: q.trim(),
       status,
       category,
+      priority,
       sort,
       order,
       page,
       limit,
     });
-  }, [q, status, category, sort, order, page, limit]);
+  }, [q, status, category, priority, sort, order, page, limit]);
 
   // Clear filters
   function onClear() {
     setQ("");
     setStatus("");
     setCategory("");
+    setPriority("");
     setSort("createdAt");
     setOrder("desc");
     setPage(1);
@@ -88,13 +91,14 @@ export default function App() {
       setOrder((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
       setSort(field);
-      setOrder(field === "createdAt" ? "desc" : "asc");
+      const defaultOrder = field === "createdAt" ? "desc" : "asc";
+      setOrder(field === "priority" ? "desc" : defaultOrder);
     }
   }
 
   useEffect(() => {
     setPage(1);
-  }, [status, category, q, limit]);
+  }, [status, category, priority, q, limit]);
 
   return (
     <div className="app">
@@ -114,6 +118,8 @@ export default function App() {
         setStatus={setStatus}
         category={category}
         setCategory={setCategory}
+        priority={priority}
+        setPriority={setPriority}
         limit={limit}
         setLimit={setLimit}
         onClear={onClear}

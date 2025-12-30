@@ -7,6 +7,7 @@ export function buildItemsQuery(params) {
   if (params.q) qs.set("q", params.q);
   if (params.status) qs.set("status", params.status);
   if (params.category) qs.set("category", params.category);
+  if (params.priority) qs.set("priority", params.priority);
 
   qs.set("sort", params.sort);
   qs.set("order", params.order);

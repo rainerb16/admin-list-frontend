@@ -1,5 +1,18 @@
 import SortIcon from "./SortIcon";
 
+  // Priority
+  function getPriorityClass(priority) {
+    switch (priority) {
+      case "low":
+        return "low";
+      case "medium":
+        return "medium";
+      case "high":
+        return "high";
+      default:
+        return "";
+    }
+  }
 export default function ItemsTable({
   sort,
   order,
@@ -20,6 +33,10 @@ export default function ItemsTable({
 
             <th className="th" onClick={() => onHeaderClick("status")}>
               Status <SortIcon active={sort === "status"} order={order} />
+            </th>
+
+            <th className="th" onClick={() => onHeaderClick("priority")}>
+              Priority <SortIcon active={sort === "priority"} order={order} />
             </th>
 
             <th className="th">Category</th>
@@ -62,6 +79,12 @@ export default function ItemsTable({
                 <td className="td">
                   <span className={`pill pill--${item.status}`}>
                     {item.status}
+                  </span>
+                </td>
+
+                <td className="td">
+                  <span className={`pill ${getPriorityClass(item.priority)}`}>
+                    {item.priority}
                   </span>
                 </td>
 

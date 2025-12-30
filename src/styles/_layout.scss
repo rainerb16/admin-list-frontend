@@ -35,7 +35,7 @@
 
 .controls {
   display: grid;
-  grid-template-columns: 1fr 160px 160px 140px 120px;
+  grid-template-columns: 1fr;
   gap: 10px;
   margin-bottom: 12px;
   padding: 12px;
@@ -51,21 +51,43 @@
     margin-bottom: 6px;
   }
 
-  input,
-  select {
-    width: 100%;
+  input {
+    width: 50%;
     padding: 10px;
     border-radius: $radius-sm;
     border: 1px solid $border-color;
   }
+}
 
-  button {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    background: white;
-    cursor: pointer;
+.control-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  align-items: center;
+
+  .control {
+    label {
+      display: block;
+      font-size: $font-sm;
+      opacity: 0.7;
+      margin-bottom: 6px;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: $radius-sm;
+      border: 1px solid $border-color;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      background: white;
+      cursor: pointer;
+    }
   }
 }
 
