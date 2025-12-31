@@ -3,6 +3,9 @@
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
+  overflow-y: auto;
+  max-height: 520px; // adjust to taste
+  border-radius: $radius-lg;
 }
 
 
@@ -12,7 +15,11 @@
 }
 
 .thead {
-  background: $bg-light;
+  background: #f5f5f5;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.5);
 }
 
 .th {
@@ -22,6 +29,7 @@
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
+  background-color: #f5f5f5;
 }
 
 .td {
