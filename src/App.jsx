@@ -147,30 +147,28 @@ export default function App() {
 
   //  Key Handler Function
   function onTableKeyDown(e) {
-  if (loading || rows.length === 0) return;
+  if (loading) return;
+  if (!rows || rows.length === 0) return;
+
+  // Don't steal keys while user is typing in an input/textarea/select
+  const tag = e.target.tagName?.toLowerCase();
+  if (tag === "input" || tag === "textarea" || tag === "select") return;
 
   if (e.key === "ArrowDown") {
     e.preventDefault();
     setActiveIndex((i) => Math.min(rows.length - 1, i + 1));
-  }
-
-  if (e.key === "ArrowUp") {
+  } else if (e.key === "ArrowUp") {
     e.preventDefault();
     setActiveIndex((i) => Math.max(0, i - 1));
-  }
-
-  if (e.key === "Enter") {
+  } else if (e.key === "Enter") {
     e.preventDefault();
     const item = rows[activeIndex];
     if (item) setSelectedId(item.id);
-  }
-
-  if (e.key === "Escape") {
+  } else if (e.key === "Escape") {
     e.preventDefault();
     setSelectedId(null);
   }
 }
-
 
   return (
     <div className="app">

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import SortIcon from "./SortIcon";
 
   // Priority
@@ -13,6 +14,7 @@ import SortIcon from "./SortIcon";
       return "";
   }
 }
+
 export default function ItemsTable({
   sort,
   order,
@@ -27,8 +29,19 @@ export default function ItemsTable({
   onTableKeyDown,
   activeIndex,
 }) {
+  const wrapperRef = useRef(null);
+  const rowRefs = useRef([]);
+
+  useEffect(() => {
+    const el = rowRefs.current[activeIndex];
+    if (el) {
+      el.scrollIntoView({ block: "nearest" });
+    }
+  }, [activeIndex]);
+
   return (
     <div 
+      ref={wrapperRef}  
       className="table-wrapper"
       tabIndex={0}
       onKeyDown={onTableKeyDown}
@@ -62,11 +75,16 @@ export default function ItemsTable({
 
         <tbody>
           {loading ? (
-            <tr>
-              <td colSpan={6} className="td">
-                ⏳ Loading items…
-              </td>
-            </tr>
+            Array.from({ length: 8 }).map((_, i) => (
+              <tr key={`sk-${i}`} className="tr tr--skeleton">
+                <td className="td"><div className="skeleton skeleton--w40" /></td>
+                <td className="td"><div className="skeleton skeleton--w30" /></td>
+                <td className="td"><div className="skeleton skeleton--w25" /></td>
+                <td className="td"><div className="skeleton skeleton--w30" /></td>
+                <td className="td"><div className="skeleton skeleton--w35" /></td>
+                <td className="td"><div className="skeleton skeleton--w60" /></td>
+              </tr>
+            ))
           ) : error ? (
             <tr>
               <td colSpan={6} className="td">
@@ -86,13 +104,13 @@ export default function ItemsTable({
             rows.map((item,idx) => (
               <tr
                 key={item.id}
+                ref={(el) => (rowRefs.current[idx] = el)}
                 className={`tr
                   ${item.id === selectedId ? "tr--selected" : ""}
                   ${idx === activeIndex ? "tr--active" : ""}
                 `}
-                onClick={() => onRowClick(item.id)}
+                onClick={() => !loading && onRowClick(item.id)}
                 onMouseEnter={() => setActiveIndex(idx)}
-                tabIndex={0}
               >
                 <td className="td">{item.name}</td>
 
