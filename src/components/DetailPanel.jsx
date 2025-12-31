@@ -12,25 +12,27 @@ function initForm(item) {
 
 export default function DetailPanel({ item, onClose, onSave, saving }) {
   // Empty state if no item is selected. Once an item is selected, styles will appear
-  if (!item) {
+  const open = Boolean(item);
+
   return (
-    <aside className="panel panel--empty">
-      <h2 className="panel__title">No item selected</h2>
-      <p className="panel__hint">Click a row to view and edit details.</p>
+    <aside className={`${open ? "panel--open" : "panel panel--closed"}`}>
+      {!item ? (
+        <>
+          <h2 className="panel__title">No item selected</h2>
+          <p className="panel__hint">Click a row to view and edit details.</p>
+        </>
+      ) : (
+        <>
+           <DetailPanelInner
+              key={item.id}
+              item={item}
+              onClose={onClose}
+              onSave={onSave}
+              saving={saving}
+            />
+        </>
+      )}
     </aside>
-  );
-}
-
-
-  // Resets form when you select a different row
-  return (
-    <DetailPanelInner
-      key={item.id}
-      item={item}
-      onClose={onClose}
-      onSave={onSave}
-      saving={saving}
-    />
   );
 }
 

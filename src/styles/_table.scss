@@ -32,10 +32,35 @@
 
 .tr {
   cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.tr:hover {
+  background: rgba(0, 0, 0, 0.035);
+  cursor: pointer;
 }
 
 .tr--selected {
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.tr--selected:hover {
+  background: rgba(0, 0, 0, 0.06); // don’t change on hover when selected
+}
+
+.tr--selected td:first-child {
+  position: relative;
+}
+
+.tr--selected td:first-child::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
 }
 
 .pill {
