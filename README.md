@@ -73,25 +73,25 @@ Features include server-side filtering, sorting, pagination, a detail panel edit
 ## Getting Started (Local Dev)
 
 ### 1) Install
-```bash
-npm install
+`npm install`
 
 ### 2) Configure environment variables
-```bash
 Create a .env file in the project root:
+`VITE_API_BASE_URL=http://localhost:3000`
+
+The backend must be running for the dashboard to load data.
 
 ### 3) Run the dev server
-```bash
-npm run dev
+`npm run dev`
 
-Open the app at the URL Vite prints (commonly http://localhost:5173).
+Open the app at the URL Vite prints (http://localhost:5173).
 
 ### Scripts
-- npm run dev — start development server
+- `npm run dev` — start development server
 
-- npm run build — create production build
+- `npm run build` — create production build
 
-- npm run preview — preview the production build locally
+- `npm run preview` — preview the production build locally
 
 
 ## Notes
