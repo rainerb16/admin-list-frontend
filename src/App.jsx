@@ -175,9 +175,6 @@ export default function App() {
       <header className="header">
         <div>
           <h1 className="title">Admin List</h1>
-          <p className="subtitle">
-            API: <code>{API_BASE}</code>
-          </p>
         </div>
       </header>
 

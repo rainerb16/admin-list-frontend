@@ -1,16 +1,112 @@
-# React + Vite
+# Admin Dashboard (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + Vite admin dashboard that displays and edits items from a REST API.  
+Features include server-side filtering, sorting, pagination, a detail panel edit flow, skeleton loading rows, and keyboard navigation.
 
-Currently, two official plugins are available:
+![Admin Dashboard Screenshot](images/dashboard.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **Data table**
+  - Server-side **sorting** (e.g., created date, status, priority)
+  - Server-side **filtering** (status, category, priority)
+  - **Search** (query string)
+  - **Pagination**
+  - **Sticky table header**
+  - Loading + empty + error states
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Detail panel**
+  - Click a row to view item details
+  - Edit fields and save changes
+  - “Saving…” state to prevent double submits
 
-## Expanding the ESLint configuration
+- **UX polish**
+  - Skeleton loading rows
+  - Row hover + selected state
+  - Keyboard navigation:
+    - Focus table (click inside)
+    - **↑ / ↓** moves the active row
+    - **Enter** selects/opens the item
+    - **Esc** closes the panel
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Tech Stack
+
+- React
+- Vite
+- Fetch API
+- Sass (SCSS)
+
+## Project Structure
+
+- src/
+    - api/
+        items.js # API helpers (fetch list, update item, build query string)
+    - components/
+        FiltersBar.jsx # Search + filters + per-page controls
+        PaginationBar.jsx # Prev/Next + page info
+        ItemsTable.jsx # Table rendering + row interaction + keyboard focus zone
+        DetailPanel.jsx # Item editing UI + saving overlay
+        SortIcon.jsx # Sort indicator icon used by table headers
+    - styles/
+        index.scss # Sass entry point
+        _variables.scss # Shared design tokens
+        _layout.scss # Layout + page structure
+        _table.scss # Table + pills + skeleton rows + sticky header
+        _panel.scss # Detail panel styles (sticky panel + overlay)
+    - App.jsx # State + data fetching orchestration
+    - main.jsx # App bootstrap
+
+
+## How It Works
+
+- The frontend keeps table controls in state:
+  - `q, status, category, priority, sort, order, page, limit`
+- Those values are converted into a query string and sent to the backend:
+  - `GET /items?q=...&status=...&sort=...&page=...`
+- The backend returns:
+  - `data`: the current page of rows
+  - `meta`: pagination metadata (page, total, totalPages)
+- The table renders rows, and selecting a row opens a detail panel.
+- Saving changes uses:
+  - `PATCH /items/:id` (then refreshes the table)
+
+## Getting Started (Local Dev)
+
+### 1) Install
+```bash
+npm install
+
+### 2) Configure environment variables
+```bash
+Create a .env file in the project root:
+
+### 3) Run the dev server
+```bash
+npm run dev
+
+Open the app at the URL Vite prints (commonly http://localhost:5173).
+
+### Scripts
+- npm run dev — start development server
+
+- npm run build — create production build
+
+- npm run preview — preview the production build locally
+
+
+## Notes
+
+- Sorting/filtering/pagination are server-side to keep the frontend fast and keep business logic centralized in the API.
+
+- The table wrapper is focusable to support keyboard navigation without creating dozens of tab stops.
+
+
+## Roadmap Ideas
+
+- Inline editing in table rows
+
+- Column resizing / column visibility toggles
+
+- Persist filters in URL (shareable table state)
+
+- Better validation and inline form errors in the detail panel
