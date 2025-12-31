@@ -2,17 +2,17 @@ import SortIcon from "./SortIcon";
 
   // Priority
   function getPriorityClass(priority) {
-    switch (priority) {
-      case "low":
-        return "low";
-      case "medium":
-        return "medium";
-      case "high":
-        return "high";
-      default:
-        return "";
-    }
+  switch (priority) {
+    case "low":
+      return "pill--low";
+    case "medium":
+      return "pill--medium";
+    case "high":
+      return "pill--high";
+    default:
+      return "";
   }
+}
 export default function ItemsTable({
   sort,
   order,
@@ -23,9 +23,18 @@ export default function ItemsTable({
   onRetry,
   onRowClick,
   selectedId,
+  setActiveIndex,
+  onTableKeyDown,
+  activeIndex,
 }) {
   return (
-    <div className="table-wrapper">
+    <div 
+      className="table-wrapper"
+      tabIndex={0}
+      onKeyDown={onTableKeyDown}
+      onClick={(e) => e.currentTarget.focus()}
+      aria-label="Items table"
+    >
       <table className="table">
         <thead className="thead">
           <tr>
@@ -74,16 +83,22 @@ export default function ItemsTable({
               </td>
             </tr>
           ) : (
-            rows.map((item) => (
+            rows.map((item,idx) => (
               <tr
                 key={item.id}
-                className={`tr ${item.id === selectedId ? "tr--selected" : ""}`}
+                className={`tr
+                  ${item.id === selectedId ? "tr--selected" : ""}
+                  ${idx === activeIndex ? "tr--active" : ""}
+                `}
                 onClick={() => onRowClick(item.id)}
+                onMouseEnter={() => setActiveIndex(idx)}
+                tabIndex={0}
               >
                 <td className="td">{item.name}</td>
 
                 <td className="td">
                   <span className={`pill pill--${item.status}`}>
+                    {item.status === "active" ? "● " : item.status === "paused" ? "⏸ " : "⛁ "}
                     {item.status}
                   </span>
                 </td>

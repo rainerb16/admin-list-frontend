@@ -19,6 +19,9 @@ export default function App() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
+  // Keyboard + Accessibility
+  const [activeIndex, setActiveIndex] = useState(0);
+
   // Selection (detail panel)
   const [selectedId, setSelectedId] = useState(null);
 
@@ -137,6 +140,38 @@ export default function App() {
     setPage(1);
   }, [status, category, priority, q, limit]);
 
+  // Reset active index
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [queryString]);
+
+  //  Key Handler Function
+  function onTableKeyDown(e) {
+  if (loading || rows.length === 0) return;
+
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    setActiveIndex((i) => Math.min(rows.length - 1, i + 1));
+  }
+
+  if (e.key === "ArrowUp") {
+    e.preventDefault();
+    setActiveIndex((i) => Math.max(0, i - 1));
+  }
+
+  if (e.key === "Enter") {
+    e.preventDefault();
+    const item = rows[activeIndex];
+    if (item) setSelectedId(item.id);
+  }
+
+  if (e.key === "Escape") {
+    e.preventDefault();
+    setSelectedId(null);
+  }
+}
+
+
   return (
     <div className="app">
       <header className="header">
@@ -176,6 +211,9 @@ export default function App() {
             onRetry={load}
             onRowClick={onRowClick}
             selectedId={selectedId}
+            activeIndex={activeIndex}
+            setActiveIndex={setActiveIndex}
+            onTableKeyDown={onTableKeyDown}
           />
         </div>
         <DetailPanel
