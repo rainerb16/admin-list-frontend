@@ -38,6 +38,7 @@
   grid-template-columns: 1fr 360px;
   gap: 16px;
   align-items: start;
+  padding: 12px;
 }
 
 @media (max-width: 900px) {
@@ -58,6 +59,10 @@
   padding: 12px;
   border: 1px solid $border-color;
   border-radius: $radius-lg;
+
+  .btn {
+    margin-left: 7px;
+  }
 }
 
 .control {
@@ -184,5 +189,13 @@ button {
   }
 }
 
+.coldstart {
+  padding: 10px 12px;
+  margin: 12px;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 10px;
+  background: rgba(0,0,0,0.03);
+  font-size: 14px;
+}
 
 

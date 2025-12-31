@@ -10,6 +10,7 @@ export default function FiltersBar({
   limit,
   setLimit,
   onClear,
+  onCreate,
 }) {
   return (
     <>
@@ -21,6 +22,9 @@ export default function FiltersBar({
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search name or notes..."
           />
+          <button type="button" className="btn" onClick={onCreate}>
+            + New Item
+          </button>
         </div>
 
         <div className="control-container">

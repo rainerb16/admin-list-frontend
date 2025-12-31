@@ -36,5 +36,16 @@ export async function patchItem(id, updates) {
   return res.json();
 }
 
+/* Add new item with POST request to /items */
+export async function createItem(payload) {
+  const res = await fetch(`${API_BASE}/items`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
 
 export { API_BASE };

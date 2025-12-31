@@ -5,7 +5,7 @@ import PaginationBar from "./components/PaginationBar";
 import ItemsTable from "./components/ItemsTable";
 import DetailPanel from "./components/DetailPanel";
 
-import { API_BASE, buildItemsQuery, fetchItems, patchItem } from "./api/items";
+import { buildItemsQuery, fetchItems, patchItem, createItem } from "./api/items";
 export default function App() {
   // Table controls
   const [q, setQ] = useState("");
@@ -18,6 +18,9 @@ export default function App() {
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+
+  // Add Item
+  const [isCreating, setIsCreating] = useState(false);
 
   // Keyboard + Accessibility
   const [activeIndex, setActiveIndex] = useState(0);
@@ -38,6 +41,18 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  // Page loading State
+  const [showColdStartHint, setShowColdStartHint] = useState(false);
+
+  useEffect(() => {
+    if (!loading) {
+      setShowColdStartHint(false);
+      return;
+    }
+    const t = setTimeout(() => setShowColdStartHint(true), 2000);
+    return () => clearTimeout(t);
+  }, [loading]);
 
   // Build query string whenever controls change
   const queryString = useMemo(() => {
@@ -72,6 +87,12 @@ export default function App() {
     setSelectedId(null);
   }
 
+  // Handle Create Item
+  function handleCreateClick() {
+  setIsCreating(true);
+  setSelectedId(null);
+}
+
   async function load() {
     setLoading(true);
     setError("");
@@ -102,12 +123,18 @@ export default function App() {
     setError("");
 
     try {
-      await patchItem(id, updates);
-      await load();
-      setSelectedId(null);
-    } catch (e) {
-      console.error(e);
-      setError("Failed to save changes.");
+      if (isCreating) {
+        await createItem(updates);
+        setIsCreating(false);
+        await load();
+      } else {
+        await patchItem(id, updates);
+        await load();
+        setSelectedId(null);
+      }
+    } catch (error) {
+      console.error(error);
+      setError(isCreating ? "Failed to create item." : "Failed to save changes.");
     } finally {
       setSaving(false);
     }
@@ -190,11 +217,18 @@ export default function App() {
         limit={limit}
         setLimit={setLimit}
         onClear={onClear}
+        onCreate={handleCreateClick}
       />
 
       <section className="card layout">
         <div className="layout__main">
           <PaginationBar loading={loading} page={page} setPage={setPage} meta={meta} />
+
+          {loading && showColdStartHint && (
+            <div className="coldstart">
+              First load can take up to ~60 seconds or more on free hosting while the API wakes up.
+            </div>
+          )}
 
           <ItemsTable
             sort={sort}
@@ -214,7 +248,11 @@ export default function App() {
         <DetailPanel
           item={selectedItem}
           saving={saving}
-          onClose={() => setSelectedId(null)}
+          isCreating={isCreating}
+          onClose={() => {
+            setIsCreating(false);
+            setSelectedId(null);
+          }}
           onSave={handleSave}
         />
       </section>
