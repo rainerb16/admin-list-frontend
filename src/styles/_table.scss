@@ -1,8 +1,10 @@
 @use "./variables" as *;
 
 .table-wrapper {
+  width: 100%;
   overflow-x: auto;
 }
+
 
 .table {
   width: 100%;
@@ -29,7 +31,11 @@
 }
 
 .tr {
-  border-top: 1px solid $border-light;
+  cursor: pointer;
+}
+
+.tr--selected {
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .pill {
@@ -74,4 +80,6 @@
     font-weight: 600;
   }
 }
+
+
 

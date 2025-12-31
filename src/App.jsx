@@ -3,10 +3,11 @@ import { useEffect, useMemo, useState } from "react";
 import FiltersBar from "./components/FiltersBar";
 import PaginationBar from "./components/PaginationBar";
 import ItemsTable from "./components/ItemsTable";
+import DetailPanel from "./components/DetailPanel";
 
-import { API_BASE, buildItemsQuery, fetchItems } from "./api/items";
-
+import { API_BASE, buildItemsQuery, fetchItems, patchItem } from "./api/items";
 export default function App() {
+  // Table controls
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
   const [category, setCategory] = useState("");
@@ -18,7 +19,10 @@ export default function App() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-    // Data state (from backend)
+  // Selection (detail panel)
+  const [selectedId, setSelectedId] = useState(null);
+
+  // Data state
   const [rows, setRows] = useState([]);
   const [meta, setMeta] = useState({
     page: 1,
@@ -27,10 +31,12 @@ export default function App() {
     totalPages: 1,
   });
 
-    // UI state
+  // UI state
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
+  // Build query string whenever controls change
   const queryString = useMemo(() => {
     return buildItemsQuery({
       q: q.trim(),
@@ -44,6 +50,12 @@ export default function App() {
     });
   }, [q, status, category, priority, sort, order, page, limit]);
 
+  // Derive selected item from rows + selectedId
+  const selectedItem = useMemo(() => {
+    if (selectedId == null) return null;
+    return rows.find((r) => r.id === selectedId) || null;
+  }, [rows, selectedId]);
+
   // Clear filters
   function onClear() {
     setQ("");
@@ -54,6 +66,7 @@ export default function App() {
     setOrder("desc");
     setPage(1);
     setLimit(10);
+    setSelectedId(null);
   }
 
   async function load() {
@@ -72,6 +85,7 @@ export default function App() {
         }
       );
     } catch (e) {
+      console.error(e);
       setError("Failed to load items. Check API URL + backend is running.");
       setRows([]);
       setMeta({ page: 1, limit, total: 0, totalPages: 1 });
@@ -80,10 +94,32 @@ export default function App() {
     }
   }
 
+  async function handleSave(id, updates) {
+    setSaving(true);
+    setError("");
+
+    try {
+      await patchItem(id, updates);
+      await load();
+      setSelectedId(null);
+    } catch (e) {
+      console.error(e);
+      setError("Failed to save changes.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function onRowClick(id) {
+    setSelectedId(id);
+  }
+
+  // Fetch whenever query changes
   useEffect(() => {
     load();
   }, [queryString]);
 
+  // Sorting UI
   function onHeaderClick(field) {
     setPage(1);
 
@@ -96,6 +132,7 @@ export default function App() {
     }
   }
 
+  // Reset to page 1 when filters/search/per-page changes
   useEffect(() => {
     setPage(1);
   }, [status, category, priority, q, limit]);
@@ -125,26 +162,29 @@ export default function App() {
         onClear={onClear}
       />
 
-      <section className="card">
-        <PaginationBar
-          loading={loading}
-          page={page}
-          setPage={setPage}
-          meta={meta}
-        />
+      <section className="card layout">
+        <div className="layout__main">
+          <PaginationBar loading={loading} page={page} setPage={setPage} meta={meta} />
 
-        <ItemsTable
-          sort={sort}
-          order={order}
-          onHeaderClick={onHeaderClick}
-          loading={loading}
-          error={error}
-          rows={rows}
-          onRetry={load}
+          <ItemsTable
+            sort={sort}
+            order={order}
+            onHeaderClick={onHeaderClick}
+            loading={loading}
+            error={error}
+            rows={rows}
+            onRetry={load}
+            onRowClick={onRowClick}
+            selectedId={selectedId}
+          />
+        </div>
+        <DetailPanel
+          item={selectedItem}
+          saving={saving}
+          onClose={() => setSelectedId(null)}
+          onSave={handleSave}
         />
       </section>
     </div>
   );
 }
-
-

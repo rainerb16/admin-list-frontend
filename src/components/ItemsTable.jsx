@@ -21,6 +21,8 @@ export default function ItemsTable({
   error,
   rows,
   onRetry,
+  onRowClick,
+  selectedId,
 }) {
   return (
     <div className="table-wrapper">
@@ -52,13 +54,13 @@ export default function ItemsTable({
         <tbody>
           {loading ? (
             <tr>
-              <td colSpan={5} className="td">
+              <td colSpan={6} className="td">
                 ⏳ Loading items…
               </td>
             </tr>
           ) : error ? (
             <tr>
-              <td colSpan={5} className="td">
+              <td colSpan={6} className="td">
                 <div className="error">{error}</div>
                 <button type="button" onClick={onRetry}>
                   Retry
@@ -67,13 +69,17 @@ export default function ItemsTable({
             </tr>
           ) : rows.length === 0 ? (
             <tr>
-              <td colSpan={5} className="td">
+              <td colSpan={6} className="td">
                 No matching items.
               </td>
             </tr>
           ) : (
             rows.map((item) => (
-              <tr key={item.id ?? item.id} className="tr">
+              <tr
+                key={item.id}
+                className={`tr ${item.id === selectedId ? "tr--selected" : ""}`}
+                onClick={() => onRowClick(item.id)}
+              >
                 <td className="td">{item.name}</td>
 
                 <td className="td">

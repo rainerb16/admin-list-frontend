@@ -24,4 +24,17 @@ export async function fetchItems(queryString) {
   return res.json(); // expects { data: [...], meta: {...} }
 }
 
+/* Update an item by sending a PATCH request to /items/:id */
+export async function patchItem(id, updates) {
+  const res = await fetch(`${API_BASE}/items/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updates),
+  });
+
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+
 export { API_BASE };
