@@ -4,10 +4,28 @@
   padding: 12px;
   background: white;
   margin: 14px;
-  position: sticky;
+  position: relative;
   top: 12px;
   transition: transform 200ms ease, opacity 200ms ease;
   will-change: transform, opacity;
+}
+
+panel__overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.7);
+  display: grid;
+  place-items: center;
+  z-index: 5;
+}
+
+.panel__overlayBox {
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.15);
+  background: white;
+  font-size: 14px;
 }
 
 .panel--closed {

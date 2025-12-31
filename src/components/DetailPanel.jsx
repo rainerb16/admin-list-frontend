@@ -48,8 +48,16 @@ function DetailPanelInner({ item, onClose, onSave, saving }) {
     onSave(item.id, form);
   }
 
+  const disabled = saving;
+
   return (
     <aside className="panel">
+      {saving && (
+        <div className="panel__overlay" aria-live="polite">
+          <div className="panel__overlayBox">Saving…</div>
+        </div>
+      )}
+      
       <div className="panel__header">
         <h2 className="panel__title">Edit Item</h2>
         <button type="button" onClick={onClose} disabled={saving}>
@@ -63,6 +71,7 @@ function DetailPanelInner({ item, onClose, onSave, saving }) {
           <input
             value={form.name}
             onChange={(e) => updateField("name", e.target.value)}
+            disabled={disabled}
           />
         </label>
 
@@ -71,6 +80,7 @@ function DetailPanelInner({ item, onClose, onSave, saving }) {
           <select
             value={form.status}
             onChange={(e) => updateField("status", e.target.value)}
+            disabled={disabled}
           >
             <option value="active">active</option>
             <option value="paused">paused</option>
@@ -83,6 +93,7 @@ function DetailPanelInner({ item, onClose, onSave, saving }) {
           <select
             value={form.category}
             onChange={(e) => updateField("category", e.target.value)}
+            disabled={disabled}
           >
             <option value="general">general</option>
             <option value="work">work</option>
@@ -95,6 +106,7 @@ function DetailPanelInner({ item, onClose, onSave, saving }) {
           <select
             value={form.priority}
             onChange={(e) => updateField("priority", e.target.value)}
+            disabled={disabled}
           >
             <option value="low">low</option>
             <option value="medium">medium</option>
@@ -108,10 +120,11 @@ function DetailPanelInner({ item, onClose, onSave, saving }) {
             rows={4}
             value={form.notes}
             onChange={(e) => updateField("notes", e.target.value)}
+            disabled={disabled}
           />
         </label>
 
-        <button type="submit" disabled={saving}>
+        <button type="submit" disabled={disabled}>
           {saving ? "Saving..." : "Save"}
         </button>
       </form>
